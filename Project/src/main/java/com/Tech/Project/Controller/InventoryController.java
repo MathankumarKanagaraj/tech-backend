@@ -14,7 +14,7 @@ public class InventoryController {
     private InventoryService inventoryService;
 
     @PostMapping("/inventory")
-    public ResponseDto createInventory(@RequestBody Inventory inventory){
+    public ResponseDto createInventory(@RequestBody Inventory inventory) throws BadRequestException {
         return this.inventoryService.createInventory(inventory);
     }
     @GetMapping("/inventory/{id}")

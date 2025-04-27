@@ -18,15 +18,15 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/order")
-    public ResponseDto createOrder(@RequestBody final Order order){
+    public ResponseDto createOrder(@RequestBody final Order order) throws BadRequestException {
         return this.orderService.createOrder(order);
     }
     @GetMapping("/order/{id}")
     public ResponseDto retriveOrder(@PathVariable final String id) throws BadRequestException {
         return this.orderService.findByOrder(id);
     }
-    @GetMapping("order/user")
-    public ResponseDto retriveOrderByUser(@RequestBody final User user) throws BadRequestException {
-        return this.orderService.findByOrderUser(user);
+        @GetMapping("order/user/{id}")
+    public ResponseDto retriveOrderByUser(@PathVariable final String  id) throws BadRequestException {
+        return this.orderService.findByOrderUser(id);
     }
 }

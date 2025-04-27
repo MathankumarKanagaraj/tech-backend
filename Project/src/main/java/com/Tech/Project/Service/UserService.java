@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public ResponseDto getUserById(String id) throws BadRequestException {
-        Optional<User> user = Optional.ofNullable(this.userRepository.findById(id).orElseThrow(() -> new BadRequestException("User not found..")));
+        Optional<User> user = this.userRepository.findById(id);
         return new ResponseDto(Constants.RETRIEVED, user, HttpStatus.OK.value());
     }
 

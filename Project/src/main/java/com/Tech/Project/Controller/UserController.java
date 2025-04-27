@@ -40,8 +40,8 @@ public class UserController {
         return this.userService.retriveUser();
     }
 
-    @GetMapping("/user/{email}")
-    public ResponseDto getUserByEmail(@PathVariable String email) throws BadRequestException {
+    @GetMapping("/users")
+    public ResponseDto getUserByEmail(@RequestParam String email) throws BadRequestException {
         return this.userService.getUserByEmail(email);
     }
 }

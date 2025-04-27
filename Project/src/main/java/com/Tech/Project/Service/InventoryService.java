@@ -2,6 +2,7 @@ package com.Tech.Project.Service;
 
 import com.Tech.Project.Dto.ResponseDto;
 import com.Tech.Project.Entity.Inventory;
+import com.Tech.Project.FeignClients.ProductClient;
 import com.Tech.Project.Repository.InventoryRepository;
 import com.Tech.Project.Utils.Constants;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,15 @@ public class InventoryService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
-    public ResponseDto createInventory(Inventory inventory) {
+    @Autowired
+    private ProductClient productClient;
+
+    public ResponseDto createInventory(Inventory inventory) throws BadRequestException {
+        ResponseDto productResponse = productClient.getProductById(String.valueOf(inventory.getProductId()));
+        if (productResponse.getStatusCode() != HttpStatus.OK.value()) {
+            throw new BadRequestException("Invalid product ID.");
+        }
+
         return new ResponseDto(Constants.CREATED, this.inventoryRepository.save(inventory), HttpStatus.CREATED.value());
     }
 
@@ -28,6 +37,11 @@ public class InventoryService {
     }
 
     public ResponseDto updateByInventory(String id, Inventory updatedInventory) throws BadRequestException {
+        ResponseDto productResponse = productClient.getProductById(String.valueOf(updatedInventory.getProductId()));
+        if (productResponse.getStatusCode() != HttpStatus.OK.value()) {
+            throw new BadRequestException("Invalid product ID.");
+        }
+
         Inventory existingInventory = inventoryRepository.findByProductId(updatedInventory.getProductId())
                 .orElseThrow(() -> new BadRequestException("Data not found."));
         existingInventory.setQuantity(updatedInventory.getQuantity());
@@ -37,6 +51,6 @@ public class InventoryService {
     }
 
     public ResponseDto retriveInventory() {
-        return new ResponseDto(Constants.RETRIEVED,this.inventoryRepository.findAll(),HttpStatus.OK.value());
+        return new ResponseDto(Constants.RETRIEVED, this.inventoryRepository.findAll(), HttpStatus.OK.value());
     }
 }
